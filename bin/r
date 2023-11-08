@@ -1,0 +1,27 @@
+#!/bin/sh 
+
+\export JAVA_HOME="/usr/lib/jvm/java-19-openjdk-arm64/"
+\export PATH="$JAVA_HOME/bin":"$PATH"
+\export JAVA_BIN="$JAVA_HOME/bin/java"
+
+\cd ../activemq-client/build/libs
+
+( \
+ "$JAVA_BIN" -Dfile.encoding=UTF-8 -cp activemq-client.jar cc.tools.activemq.client.ActiveMQClient \
+ -protocol http \
+ -hostname localhost \
+ -port 8081 \
+ -url /activemq/server/logger/log \
+ -client-private-keyfile /opt/live/activemq-client/current/certs/client-private.key \
+ -client-public-keyfile /opt/live/activemq-client/current/certs/client-public.key \
+ -server-public-keyfile /opt/live/activemq-client/current/certs/server-public.key \
+ -credentials /opt/live/activemq-client/current/certs/credentials \
+ -message 'log me' \
+ -count 1 \
+ -sleep 2000 \
+ -channel 'jms/queue/CCQueue' \
+ -debug \
+ -unique \
+ )
+
+#1>/dev/null 2>/dev/null
